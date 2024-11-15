@@ -104,34 +104,10 @@ jobs:
         pip install bandit safety
 
     - name: Run Bandit
-      run: bandit -r app | tee bandit-report.txt
+      run: bandit -r app
 
     - name: Run Safety
-      run: safety check | tee safety-report.txt
-
-    - name: Annotate Bandit issues
-      if: always()
-      run: |
-        bandit -r app -f json -o bandit-results.json
-        python3 -c "
-import json
-with open('bandit-results.json') as f:
-    results = json.load(f)
-for result in results['results']:
-    print(f'::error file={result['filename']},line={result['line_number']}::{result['issue_text']}')
-"
-
-    - name: Annotate Safety issues
-      if: always()
-      run: |
-        safety check --json > safety-results.json
-        python3 -c "
-import json
-with open('safety-results.json') as f:
-    results = json.load(f)
-for result in results:
-    print(f'::error file=requirements.txt,line=1::{result['vulnerability_id']} - {result['description']}')
-"
+      run: safety check
 
   dependency_management:
     runs-on: ubuntu-latest
