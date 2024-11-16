@@ -72,6 +72,9 @@ jobs:
         curl -LsSf https://astral.sh/uv/install.sh | sh
         uv sync --all-extras
 
+    - name: Set PYTHONPATH
+      run: echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
+
     - name: Run tests
       run: uv run python -m pytest tests
 
